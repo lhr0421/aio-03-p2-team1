@@ -212,11 +212,14 @@ def test_filters_and_pages_use_one_cached_fetch():
     with client_with(api) as client:
         first = client.get("/api/v1/posts?page=1").json()
         second = client.get("/api/v1/posts?page=2").json()
+        third = client.get("/api/v1/posts?page=3").json()
         cats = client.get("/api/v1/posts?species=cat").json()
         gyeonggi = client.get("/api/v1/posts?region=경기도").json()
         week = client.get("/api/v1/posts?days=7").json()
-    assert first["pages"] == 3 and len(first["items"]) == 20 and len(second["items"]) == 20
+    assert first["pages"] == 3 and first["rows"] == 21
+    assert len(first["items"]) == 21 and len(second["items"]) == 21 and len(third["items"]) == 4
     assert {i["id"] for i in first["items"]}.isdisjoint({i["id"] for i in second["items"]})
+    assert {i["id"] for i in second["items"]}.isdisjoint({i["id"] for i in third["items"]})
     assert cats["count"] == 1 and gyeonggi["count"] == 1
     assert week["count"] < first["count"]
     # 기본 30일 1번 + 7일 1번 = 기간 2개 × 축종 3번. 필터·페이지 변경은 다시 부르지 않는다.

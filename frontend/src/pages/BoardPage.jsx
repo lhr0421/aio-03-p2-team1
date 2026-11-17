@@ -6,7 +6,7 @@ import NoticePhoto from '../components/NoticePhoto.jsx'
 import StoryBanner from '../components/StoryBanner.jsx'
 import { useRegions } from './useRegions.js'
 
-const ROWS = 20
+const ROWS = 21
 
 export default function BoardPage() {
   const [species, setSpecies] = useState('all')
